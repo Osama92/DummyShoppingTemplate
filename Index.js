@@ -9,6 +9,7 @@ import Oils from './Components/Oils'
 import Pasta from './Components/Pasta'
 import CatMenu from './Components/CatMenu'
 import Cart from './Screens/Cart'
+import CheckOut from './Screens/CheckOut'
 
 const Stack = createStackNavigator()
 
@@ -26,6 +27,7 @@ class Index extends Component {
           <Stack.Screen name='Flour' component={Flour}/>
           <Stack.Screen name='CatMenu' component={CatMenu}/>
           <Stack.Screen name='Cart' component={Cart}/>
+          <Stack.Screen name='CheckOut' component={CheckOut}/>
         
         </Stack.Navigator>
     </NavigationContainer>
