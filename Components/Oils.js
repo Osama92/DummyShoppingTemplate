@@ -28,11 +28,11 @@ class Oils extends Component {
               <Image  style={{width: 25, height: 25, tintColor:'#1b9cfc'}}
                       source={require('../assets/leftBtn.png')}/>
             </TouchableOpacity>
-            <View style={styles.cart}>
+            <TouchableOpacity style={styles.cart} onPress={()=>this.props.navigation.navigate('Cart')}>
               <View style={styles.cartIcon}>
                 <MyCart count={this.props.cartItems.length}/>
               </View>
-            </View>
+            </TouchableOpacity>
           </View>
         </ImageBackground>
        </View>
@@ -109,12 +109,14 @@ const styles = StyleSheet.create({
   descriptionView: {
     width:'50%',
     //backgroundColor: 'green',
-    padding: 10
+    padding: 10,
+    paddingTop: 20
   },
   price: {
     width:'50%',
     //backgroundColor: 'red',
-    padding: 10
+    padding: 10,
+    paddingTop: 20
   },
   label: {
     height: '10%',
