@@ -6,6 +6,8 @@ import {products} from '../Data'
 import Swiper from 'react-native-swiper'
 import MyCart from '../Components/MyCart'
 import {connect} from 'react-redux'
+import SearchableDropdown from 'react-native-searchable-dropdown'   
+
 
 
 const screenHeight = Dimensions.get('screen').height
@@ -61,36 +63,37 @@ class Home extends Component {
     renderItem = ({item})=> (
         
         <View style={{minHeight: 70,margin:9, width:screenWidth/3.5, alignItems:'center', backgroundColor: '#fff', borderRadius: 7, padding:5}}>
-            <TouchableOpacity onPress={()=>{this.props.navigation.navigate('Oils' , { viewClicked: item})}}>
+            <TouchableOpacity onPress={()=>{this.props.navigation.navigate('Oils' , { viewClicked: item})}} style={{justifyContent: 'center',}}>
             <Image source={item.image}
                    style={{width: 90, height: 90, resizeMode: 'cover', justifyContent:'center'}}/>
-                   <Text style={{width:'100%', fontWeight:'700',textAlign:'center', color:'black'}}>{item.name}</Text>
-                   <Text style={{width:'100%', fontWeight:'700',textAlign:'center',color:'black'}}>{item.price}</Text>
+                   <Text style={{width:'100%', fontWeight:'700',textAlign:'left', color:'black', width:60}}>{item.name}</Text>
+                   <Text style={{width:'100%', fontWeight:'700',textAlign:'left',color:'grey', fontSize:11}}>₦{item.price}.00</Text>
                    
             </TouchableOpacity>
 
         </View>
     )
 
+
    headerComponentRender = () => (
     <View style={{flexDirection: 'column', paddingTop: 10}}>
         <View style={styles.MPView}>
             
-            <Swiper showsPagination={true} autoplay={true} dotColor='black' activeDotColor='white' autoplayTimeout={5}>
+            <Swiper showsPagination={true} autoplay={true} dotColor='silver' activeDotColor='#1b9cfc' autoplayTimeout={5}>
                 <ImageBackground source={require('../assets/images/mamador.jpg')}
                                  resizeMode='cover'
                                  style={styles.slide1}>
-                    <Text style={styles.slideText}>Hello1</Text>
+                    
                 </ImageBackground>
                 <ImageBackground source={require('../assets/images/Kings2.png')}
                                   resizeMode='contain'
                                  style={styles.slide1}>
-                    <Text style={styles.slideText}>Hello 2</Text>
+                    
                 </ImageBackground>
                 <ImageBackground source={require('../assets/images/indomie3.jpg')}
                                   resizeMode='contain'
                                  style={styles.slide1}>
-                    <Text style={styles.slideText}>Hello 3</Text>
+                    
                 </ImageBackground>
             </Swiper>
             
@@ -108,6 +111,7 @@ class Home extends Component {
            <FlatList numColumns={3}
            data={section.data}
            renderItem={this.renderItem}
+           
            />
        )
    }
@@ -115,8 +119,8 @@ class Home extends Component {
    isEmptyRender(sections) {
         if (sections.data.length == 0) {
             return(
-                <View style={{flex:1, alignItems:'center',justifyContent:'center', marginTop: 50}}>
-                <Text style={{color: 'blue'}}>Cannot find your item</Text>
+                <View style={{flex:1, alignItems:'center',justifyContent:'center', height: 60}}>
+                <Text style={{color: 'grey', fontWeight:'500', fontSize: 17}}>Unfortunately no match was found</Text>
                 </View>
             )
         } 
@@ -134,23 +138,23 @@ class Home extends Component {
  
 
   render() {
+      
 
     const section = [
-        {title:'Popular', data: this.state.products},
-        {title:'showcase', data: this.state.products}
-                                                        
-
-    ]
+        {title:'Food Cupboard', data: products},
+        {title:'Showcase', data: products}
+             ]
     if (this.state.fontsLoaded) {
     return (
         
       <View style={styles.container}>
-          {this.state.isLoading? (<View style={{...StyleSheet.absoluteFill, alignItems:'center', justifyContent:'center'}}>
-                <ActivityIndicator size='large' color='blue'/>
-            </View>) : null}
            
         <View style={styles.HeaderView}>
             <View style={styles.headerFV}>
+            <TouchableOpacity   onPress={()=>this.props.navigation.navigate('Profile')}
+                                style={{width: 30, height: 30, marginTop:20, borderRadius: 15, backgroundColor:'#f3f3f3', justifyContent:'center', alignItems:'center'}}>
+                <Image source={require('../assets/customer.png')} style={{width: 20, height: 20}}/>
+            </TouchableOpacity>
                 <View style={styles.cartItem}>
                     <TouchableOpacity onPress={()=>this.props.navigation.navigate('Cart')}>
                         <MyCart count={this.props.cartItems.length}/>
@@ -163,110 +167,55 @@ class Home extends Component {
             <View style={styles.headerSV}>
                 <Text style={styles.headerText}>Hello There!</Text>
             </View>
-            <TextInput style={styles.textInput}
+            {/* <TextInput style={styles.textInput}
                        placeholder='What are you looking for?'
                        placeholderTextColor='grey'
-                       onChangeText={(value)=>this.searchProducts(value)}/>
-                      
-                            
-                       {/* <SearchableDropdown  onTextChange={(value)=>this.searchProducts(value)}
-                                            onItemSelect={item=> this.props.addItemToCart(item)}
+                       onChangeText={(value)=>this.searchProducts(value)}/> */}
+                <SearchableDropdown  onTextChange={(value)=>this.searchProducts(value)}
+                                            onItemSelect={item=> this.props.navigation.navigate('Oils', { viewClicked: item})}
                                             //containerStyle={{backgroundColor:'blue'}}
                                             itemStyle={{padding: 10, marginTop: 2, backgroundColor:'#f1f1f1'}}
                                             itemsContainerStyle={{maxHeight: 300,}}
                                             items = {products}
-                                            itemTextStyle={{fontFamily: 'Roboto', fontSize: 15}}
+                                            itemTextStyle={{fontFamily: 'Roboto', fontSize: 13}}
                                             defaultIndex={0}
-                                            placeholder='Search items here'
+                                            placeholder='What are you looking for?'
                                             placeholderTextColor = 'grey'
-                                            //resetValue={true}
+                                            resetValue={true}
                                             textInputStyle={styles.textInput}
-                                            
-                                            /> */}
+                                            listProps={
+                                                {
+                                                    ListEmptyComponent: ()=>(
+                                                        
+                                                        <View style={{justifyContent: 'center', alignItems: 'center', height:300}}>
+                                                            <Text style={{fontSize:15}}>Unfortunately, we could not find your item</Text>
+                                                        </View>
+                                                    ),
 
-                        <SectionList 
-                                            ListHeaderComponent={this.headerComponentRender}
-                                            renderItem={this._renderList}
-                                            sections={section}
-                                            renderSectionHeader={({section})=>(
-                                                    <View style={{flexDirection: 'row', width:'100%', justifyContent:'space-around', alignItems:'center', backgroundColor:'#1b9cfc'}}>
-                                                        <Text style={styles.labelText}>{section.title}</Text>
-                                                            <TouchableOpacity style={{width:'50%', alignItems:'flex-end'}}>
-                                                                <Text style={styles.labelText2}>View all</Text>
-                                                            </TouchableOpacity>
-                                                     </View>
-                                                    )}
-                                            showsVerticalScrollIndicator={false}
-                                           renderSectionFooter={({section})=>this.isEmptyRender(section)}
+                                                }
+                                            }
                                             
-                                
-                                />
+                                            />     
+                            
+
+            <SectionList 
+                ListHeaderComponent={this.headerComponentRender}
+                renderItem={this._renderList}
+                sections={section}
+                renderSectionHeader={({section})=>(
+                        <View style={{flexDirection: 'row', width:'100%', justifyContent:'space-around', alignItems:'center', backgroundColor:'#1b9cfc'}}>
+                           <Text style={styles.labelText}>{section.title}</Text>
+                             <TouchableOpacity style={{width:'50%', alignItems:'flex-end'}}
+                                               onPress={()=>this.props.navigation.navigate('Sections', { clicked: section})}>
+                                <Text style={styles.labelText2}>View all</Text>
+                                    </TouchableOpacity>
+                        </View>
+                          )}
+                showsVerticalScrollIndicator={false}
+                //renderSectionFooter={({section})=>this.isEmptyRender(section)}
+                />
                        
         </View>
-       
-
-        {/* <CatMenu/> */}
-   
-         {/* <ScrollView>
-        <View style={styles.MPView}>
-            
-                <Swiper showsPagination={true} autoplay={true} dotColor='black' activeDotColor='white' autoplayTimeout={5} bounces={true}>
-                    <ImageBackground source={require('../assets/images/image1.jpg')}
-                                     style={styles.slide1}>
-                        <Text style={styles.slideText}>Hello1</Text>
-                    </ImageBackground>
-                    <ImageBackground source={require('../assets/images/image2.jpg')}
-                                     style={styles.slide1}>
-                        <Text style={styles.slideText}>Hello 2</Text>
-                    </ImageBackground>
-                    <ImageBackground source={require('../assets/images/image3.jpg')}
-                                     style={styles.slide1}>
-                        <Text style={styles.slideText}>Hello 3</Text>
-                    </ImageBackground>
-                </Swiper>
-                
-                </View>
-         
-           
-            <View style={styles.labelView}>
-                <Text style={styles.labelText}>Most Popular</Text>
-                <TouchableOpacity style={{width: '50%', alignItems:'flex-end'}}>
-                    <Text style={styles.labelText2}>View all</Text>
-                </TouchableOpacity>
-                
-            </View>
-           
-    
-        <View style={{flex: 1, height:'100%', width:'100%', paddingTop:10, backgroundColor: 'white'}}>
-            {this.state.isLoading? (<View style={{...StyleSheet.absoluteFill, alignItems:'center', justifyContent:'center'}}>
-                <ActivityIndicator size='large' color='blue'/>
-            </View>) : null}
-            <FlatList
-                
-                data={this.state.products}
-                renderItem={this.renderItem}
-                ListEmptyComponent={()=>
-                    <View style={{flex:1, alignItems:'center',justifyContent:'center', marginTop: 50}}>
-                        <Text style={{color: 'blue'}}>Cannot find your item</Text>
-                        </View>}
-                numColumns={3}/>
-                
-        </View>
-        <View style={styles.labelView}>
-                <Text style={styles.labelText}>Most Popular</Text>
-                <TouchableOpacity style={{width: '50%', alignItems:'flex-end'}}>
-                    <Text style={styles.labelText2}>View all</Text>
-                </TouchableOpacity>
-                
-            </View>
-            
-        </ScrollView> */}
-
-
-       
-        
-
-
         
         <StatusBar barStyle='dark-content'/>
       </View>
@@ -290,8 +239,8 @@ const styles = StyleSheet.create({
         width: screenWidth,
         height: screenHeight,
         flexDirection:'column',
-        padding: 5,
-        //justifyContent:'space-around'
+        //marginRight:30,
+        //justifyContent:'center'
         
     },
     menuView: {
@@ -305,11 +254,13 @@ const styles = StyleSheet.create({
         //backgroundColor: '#fff'
     },
     headerFV: {
+        flexDirection:'row',
         paddingTop: 15,
         width: '100%',
         height: '10%',
         //backgroundColor:'green',
-        alignItems:'flex-end'
+        //alignItems:'flex-end'
+        justifyContent:'space-around'
 
     },
     headerSV: {
@@ -396,7 +347,9 @@ const styles = StyleSheet.create({
         height: 60,
         borderRadius: 30,
         justifyContent: 'center',
-        alignItems:'center'
+        alignItems:'center',
+        marginLeft:200,
+        marginTop:10
         
     },
     slide1: {

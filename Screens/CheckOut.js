@@ -14,7 +14,8 @@ class CheckOut extends Component {
     this.state = {
       item: this.props.cartItems,
       total: this.props.total,
-      trackingNo: this.makeTrackingNumber(8)
+      trackingNo: this.makeTrackingNumber(8),
+      name: ''
     };
   }
 
@@ -31,7 +32,7 @@ class CheckOut extends Component {
   }
   firebaseWrite = ()=> {
        //FIREBASE WRITE:
-    firebase.database().ref('user/' + this.state.trackingNo).set({
+    firebase.database().ref('user/' + this.state.name + '/' + this.state.trackingNo).set({
       Item: this.state.item ,
       Total: this.state.total
   }).then(
@@ -52,6 +53,20 @@ class CheckOut extends Component {
       }
       return result
   }
+
+
+  componentDidMount() {
+    var user = firebase.auth().currentUser
+    var name
+ 
+    if (user != null) {
+      name = user.displayName
+      this.setState({name:name})
+     
+      
+    }
+   }
+
 
   render() {
    
