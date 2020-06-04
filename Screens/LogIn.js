@@ -1,69 +1,55 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableWithoutFeedback, Animated, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableWithoutFeedback, Animated, TouchableOpacity, Alert, Image } from 'react-native';
 import firebase from 'firebase'
 import * as Facebook from 'expo-facebook'
 
-var provider = new firebase.auth.FacebookAuthProvider()
+
 
 
 class LogIn extends Component {
-    constructor(props) {
-        super(props)
 
-        this.handlePressIn = this.handlePressIn.bind(this)
-        this.handlePressOut = this.handlePressOut.bind(this)
-    }
+
+  componentDidMount() {
+    var firebaseConfig = {
+      apiKey: "AIzaSyCUdnkw82O5UtEiGphWG9iM-sF-LgAPFjg",
+      authDomain: "alubarika-28416.firebaseapp.com",
+      databaseURL: "https://alubarika-28416.firebaseio.com",
+      projectId: "alubarika-28416",
+      storageBucket: "alubarika-28416.appspot.com",
+      messagingSenderId: "391925263393",
+      appId: "1:391925263393:web:71eda9910a8278a051c760",
+      measurementId: "G-9871R0GPEL"
+    };
+   // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    //firebase.analytics();
+    this.getUsername()
+    
+  }
+
+    
 
     state = {
         name: ''
     }
 
 
-    handlePressIn() {
-        Animated.spring(this.animatedValue, {toValue: .5}).start()
-    }
-
-    handlePressOut() {
-        Animated.spring(this.animatedValue, {toValue: 1, friction: 2, tension: 50}).start()
-    }
-
-    // componentDidMount() {
-    //     // this.animatedValue = new Animated.Value(1);
-    //     firebase.auth().onAuthStateChanged((user)=>{
-    //         if (user != null) {
-    //             console.log(user)
-    //         }
-    //     })
-
-    // }
-
-    
-
-    // async loginWithFacebook() {
-
-    //     const {type, token} = await Facebook.logInWithReadPermissionsAsync('566325950929908', {permissions: ['public_profile', 'email']})
-    //     if (type === 'success') {
-            
-               
-            
-    //         const credential = firebase.auth.FacebookAuthProvider.credential(token)
-    //         firebase.auth().signInAndRetrieveDataWithCredential(credential).catch((error) => {console.log(error)})
-           
-    //     }
-        
-    // }
+   
 
     getUsername =()=> {
         firebase.auth().onAuthStateChanged((user)=> {
             if (user != null) {
                 console.log(user.displayName)
-                this.props.navigation.navigate('Home')
+                // this.props.navigation.navigate('Home')
+                this.props.navigation.navigate('Details')
                 this.setState({name: user.displayName})
             } else {
                 this.setState({name: ''})
             }
         })
     }
+
+    
 
     async logIn() {
         try {
@@ -101,34 +87,36 @@ class LogIn extends Component {
       }
 
   render() {
-      const animatedStyle = {
-          transform: [{scale: this.animatedValue}]
-      }
-
-     
+      
     return (
       <View style={styles.container}>
-          {/* <TouchableWithoutFeedback
-                onPressIn={this.handlePressIn}
-                onPressOut={this.handlePressOut}>
-          <Animated.View style={[styles.button, animatedStyle]}>
-            <Text style={{color:'#fff'}}>Login</Text>
-            </Animated.View>
-          </TouchableWithoutFeedback> */}
 
-          <TouchableOpacity onPress={()=>{this.logIn(); this.getUsername()}}>
-          <Text style={{color:'#333'}}>Login</Text>
-          </TouchableOpacity>
+        <View style={styles.logoView}>
+          <Image source={require('../assets/logo1.png')}/>
+          <Image source={require('../assets/bag.png')} style={{width:350, height:350}}/>
+        </View>
+        <View style={styles.buttonView}>
+        
+          <Text style={{color:'#333', fontSize:25, fontWeight: '700'}}>Continue with:</Text>
+          
 
           <TouchableOpacity onPress={()=>this.signOut()}>
           <Text style={{color:'#333'}}>signOut</Text>
           </TouchableOpacity>
-        <Text>{this.state.name}</Text>
+          <TouchableOpacity   onPress={()=>this.logIn()}
+                              style={{width:100, height:100, borderRadius: 50, backgroundColor:'#fff',alignItems:'center', justifyContent:'center'}}>
+            <Image source={require('../assets/facebookC.png')} style={{width:60, height:60}}/>
+          </TouchableOpacity>
+        </View>
+         
+          
         
       </View>
     );
   }
 }
+
+// onPress={()=>{this.logIn(); this.getUsername()}}
 
 const styles = StyleSheet.create({
     container: {
@@ -144,7 +132,25 @@ const styles = StyleSheet.create({
          height: 50,
          justifyContent:'center',
          alignItems:'center'
+     },
+     logoView: {
+      width: '100%',
+      height:'70%',
+      //backgroundColor: 'green',
+      alignItems:'center',
+      justifyContent:'center'
+     },
+     buttonView: {
+      flex:1,
+      width: '100%',
+      height:'30%',
+      backgroundColor: '#f3f3f3',
+      justifyContent:'center',
+      alignItems:'center',
+      borderTopLeftRadius:30,
+      borderTopRightRadius:30
      }
+
 });
 
 export default LogIn;

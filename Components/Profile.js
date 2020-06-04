@@ -7,9 +7,20 @@ class Profile extends Component {
     super(props);
     this.state = {
       name:'',
-      photo: 'https://graph.facebook.com/10214339220712649/picture',
-      email:''
+      photo: '',
+      email:'',
+      Address:'',
+      phone:''
     };
+  }
+
+  readData = ()=> {
+    firebase.database().ref('user/details').once('value').then((snapShot)=> {
+      var Address = snapShot.child('Address').val()
+      this.setState({Address:Address})
+      var Phone = snapShot.child('Phone').val()
+      this.setState({phone:Phone})
+    })
   }
 
   componentDidMount() {
@@ -19,13 +30,15 @@ class Profile extends Component {
    if (user != null) {
      name = user.displayName
      this.setState({name:name})
-     photoUrl =  user.photoURL
+     photoUrl =  user.photoURL.toString()
      this.setState({photo:photoUrl+'?height=600'})
      email = user.email
      console.log(email)
      this.setState({email:email})
      
    }
+
+   this.readData()
   }
 
   render() {
@@ -41,7 +54,7 @@ class Profile extends Component {
         </View>
         <View style={styles.profile}>
           <View style={styles.profilePicture}>
-            <Image source={{uri:this.state.photo}} style={styles.profilePicture}/>
+            <Image source={{url:this.state.photo}} style={styles.profilePicture}/>
           </View>
         </View>
         <View style={styles.details}>
@@ -53,16 +66,20 @@ class Profile extends Component {
               </View>
           </View>
           <View style={styles.Address}>
+            <View style={{flexDirection:'row', justifyContent:'space-between'}}>
             <Text style={{color:'#333', paddingLeft: 10, fontSize: 20,fontWeight: '800'}}>Delivery Details</Text>
+            <TouchableOpacity onPress={()=>this.props.navigation.navigate('Details')}>
+              <Text style={{paddingRight:10,fontSize: 15,fontWeight: '800', color: '#333'}}>Edit</Text>
+            </TouchableOpacity>
+            </View>
             <Text style={{color:'#333', paddingLeft: 10, fontSize: 14,fontWeight: '600'}}>Your default shipping address:</Text>
-            <Text style={{paddingLeft:10,paddingTop:10}}>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</Text>
+            <Text style={{paddingLeft:10,paddingTop:10, fontSize:20, fontWeight:'300'}}> {this.state.Address}</Text>
           </View>
           <View style={styles.phone}>
           <Text style={{color:'#333', paddingLeft: 10, fontSize: 20,fontWeight: '800'}}>Contact Details</Text>
           <View style={{flexDirection:'row', justifyContent:'space-around', paddingBottom:10}}>
           <Text style={{color:'#333', fontSize: 15, fontWeight: '600'}}>Phone number:</Text>
-          <Text style={{color:'#333', fontSize: 15, fontWeight: '600'}}>2346253635363</Text>
+          <Text style={{color:'#333', fontSize: 15, fontWeight: '600'}}>{this.state.phone}</Text>
           </View>
           <View style={{flexDirection:'row', justifyContent:'space-around'}}>
           <Text style={{color:'#333', fontSize: 15, fontWeight: '600'}}>Email address:</Text>
@@ -102,7 +119,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 100,
-    resizeMode:'cover'
+    resizeMode:'cover',
     //backgroundColor: 'grey',
   },
   accountD: {
