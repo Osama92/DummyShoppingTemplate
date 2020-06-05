@@ -15,7 +15,9 @@ class CheckOut extends Component {
       item: this.props.cartItems,
       total: this.props.total,
       trackingNo: this.makeTrackingNumber(8),
-      name: ''
+      name: '',
+      Address:'',
+      Phone:''
     };
   }
 
@@ -30,6 +32,16 @@ class CheckOut extends Component {
         {cancelable: false}
       )
   }
+
+  readData = ()=> {
+    firebase.database().ref('user/details').once('value').then((snapShot)=> {
+      var Address = snapShot.child('Address').val()
+      this.setState({Address:Address})
+      var Phone = snapShot.child('Phone').val()
+      this.setState({Phone:Phone})
+    })
+  }
+
   firebaseWrite = ()=> {
        //FIREBASE WRITE:
     firebase.database().ref('user/' + this.state.name + '/' + this.state.trackingNo).set({
@@ -65,6 +77,7 @@ class CheckOut extends Component {
      
       
     }
+    this.readData()
    }
 
 
@@ -88,10 +101,13 @@ class CheckOut extends Component {
           <View style={{flexDirection: 'row', paddingLeft: 40, marginTop: 10}}>
             <Text style={{fontSize: 25, fontWeight: '700'}}>1.</Text>
             <Text style={{fontSize: 25, fontWeight: '700'}}> Shipping</Text>
+            <TouchableOpacity style={{width:'50%', alignItems:'flex-end', justifyContent:'center'}} onPress={()=>this.props.navigation.navigate('Details')}>
+              <Text style={{fontWeight:'700', color:'#333'}}>Edit</Text>
+            </TouchableOpacity>
           </View>
           <Text style={{paddingLeft:40}}> Delivery Address</Text>
-          <Text style={{paddingLeft:40, color: 'grey', textAlign:'left', width:'90%'}}>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</Text>
+          <Text style={{paddingLeft:40, color: 'grey', textAlign:'left', width:'90%', fontSize:20, paddingTop:10}}>{this.state.Address}</Text>
+          <Text style={{paddingLeft:40, color: 'grey', textAlign:'left', width:'90%',fontSize:20, fontWeight:'700'}}>{this.state.Phone}</Text>
         </View>
 
 

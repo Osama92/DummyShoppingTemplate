@@ -80,7 +80,7 @@
 // export default Details;
 
 import React, { Component } from "react";
-import { Button, Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, StyleSheet,Text, TextInput, TouchableWithoutFeedback, View, Alert } from "react-native";
+import { Button, Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, StyleSheet,Text, TextInput, TouchableWithoutFeedback, View, Alert, TouchableOpacity } from "react-native";
 import firebase from 'firebase'
 
 class Details extends Component {
@@ -91,14 +91,14 @@ class Details extends Component {
           name: '',
           Address: '',
           Additional: '',
-          phone:'',
-          data: []
+          phone:''
          };
        }
 
 
+      
        
-
+       
   componentDidMount() {
     var user = firebase.auth().currentUser
     var name, email, photoUrl, phone
@@ -112,7 +112,6 @@ class Details extends Component {
       console.log(email)
       this.setState({email:email})
 
-    
       
     }
     
@@ -168,6 +167,9 @@ class Details extends Component {
                 <SafeAreaView style={styles.container}>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={styles.inner}>
+                            <TouchableOpacity onPress={()=>{this.props.navigation.goBack(null)}}>
+                              <Text style={{fontWeight:'700', color:'#333',fontSize:15}}>Back</Text>
+                            </TouchableOpacity>
                             <Text style={styles.header}>
                                 Hi there!
                             </Text>
@@ -195,9 +197,9 @@ class Details extends Component {
                                 placeholder="Phone number"
                                 style={styles.input}
                             />
-                            <View style={styles.btnContainer}>
-                                <Button title="Submit" onPress={() =>this.submit()} color='#fff' />
-                            </View>
+                            <TouchableOpacity style={styles.btnContainer} onPress={() =>this.submit()}>
+                                <Text style={{color:'#fff', fontSize:20, fontWeight:'500'}}>Submit</Text>
+                            </TouchableOpacity>
                             <Text style={{textAlign:'center', color: 'grey',marginTop:10}}>We know how much you value your data,your data is safe with us.Information collected here is solely for delivery of items purchased on this platform.</Text>
                             <View style={{ flex : 1 }} />
                         </View>
@@ -232,6 +234,9 @@ const styles = StyleSheet.create({
     btnContainer: {
         backgroundColor: "#333",
         marginTop: 12,
+        height:40,
+        alignItems:'center',
+        justifyContent:'center'
     },
 });
 

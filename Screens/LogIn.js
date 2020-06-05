@@ -21,7 +21,9 @@ class LogIn extends Component {
       measurementId: "G-9871R0GPEL"
     };
    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+    if(!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
     //firebase.analytics();
     this.getUsername()
     
@@ -41,7 +43,7 @@ class LogIn extends Component {
             if (user != null) {
                 console.log(user.displayName)
                 // this.props.navigation.navigate('Home')
-                this.props.navigation.navigate('Details')
+                this.props.navigation.navigate('Home')
                 this.setState({name: user.displayName})
             } else {
                 this.setState({name: ''})

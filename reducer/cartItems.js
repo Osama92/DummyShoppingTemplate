@@ -1,11 +1,9 @@
 import {products} from '../Data'
 const initialState = [
-    {
-        products
-    }
+    
 ]
 
-const cartItems = (state = [], action) => {
+const cartItems = (state = initialState, action) => {
     switch (action.type) {
         case 'ADD_TO_CART':
            
@@ -25,7 +23,7 @@ const cartItems = (state = [], action) => {
         case 'INCREASE':
             state.map((item, i) => {
                  {
-                    if (item.id === action.payload.id) {
+                    if (item.id === action.payload.id && item.qty < 10) {
                         item.qty++
                         
                     }
@@ -36,7 +34,8 @@ const cartItems = (state = [], action) => {
             case 'DECREASE':
             state.map((item, i) => {
                  {
-                    if (item.id === action.payload.id) {
+                    if (item.id === action.payload.id && item.qty > 1) {
+                        
                         item.qty--
                     }
                 } 
@@ -47,6 +46,13 @@ const cartItems = (state = [], action) => {
 
         case 'REMOVE_FROM_CART':
             return state.filter(cartItems=>cartItems.id !== action.payload.id)
+        
+        case 'CLEAR':
+            state = initialState
+                
+               
+
+            
         
 
     }

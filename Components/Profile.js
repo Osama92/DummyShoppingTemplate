@@ -7,7 +7,7 @@ class Profile extends Component {
     super(props);
     this.state = {
       name:'',
-      photo: '',
+      photo: 'https://picsum.photos/id/1080/200/300',
       email:'',
       Address:'',
       phone:''
@@ -54,7 +54,7 @@ class Profile extends Component {
         </View>
         <View style={styles.profile}>
           <View style={styles.profilePicture}>
-            <Image source={{url:this.state.photo}} style={styles.profilePicture}/>
+            <Image source={{uri:this.state.photo}} style={styles.profilePicture}/>
           </View>
         </View>
         <View style={styles.details}>
